@@ -1,0 +1,2343 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThaiTalk - Học Tiếng Thái</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --saffron: #F4D4A8;
+            --jade: #A8D5BA;
+            --pink: #E8A8C8;
+            --gold: #F9E79F;
+            --purple: #D4A5D4;
+            --dark: #3D3A36;
+            --gray: #7A7A7A;
+            --light-gray: #B8B8B8;
+            --bg: #FAFAF9;
+            --success: #8BC78F;
+            --warning: #F5B66D;
+            --error: #E8847A;
+            --info: #8ABFD4;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            background-color: var(--bg);
+            color: var(--dark);
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== GLOBAL STYLES ===== */
+        .screen {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 20px;
+        }
+
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--jade), var(--saffron));
+            padding: 12px 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 56px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 22px;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        header .header-icon {
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        header .header-icon:active {
+            transform: scale(0.9);
+        }
+
+        .btn-back {
+            background: rgba(255,255,255,0.3);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.2s;
+        }
+
+        .btn-back:active {
+            background: rgba(255,255,255,0.5);
+        }
+
+        button {
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--jade);
+            color: white;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+            box-shadow: 0 4px 12px rgba(168,213,186,0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--jade);
+            border: 2px solid var(--jade);
+        }
+
+        .btn-secondary:active {
+            background: var(--jade);
+            color: white;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+
+        /* ===== HOME SCREEN ===== */
+        .home-container {
+            padding: 20px 16px;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(232,168,200,0.2), rgba(212,165,212,0.2));
+            border-radius: 12px;
+        }
+
+        .logo {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .app-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .welcome-subtitle {
+            font-size: 14px;
+            color: var(--gray);
+            font-style: italic;
+        }
+
+        .stats-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--jade);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .lessons-section h2 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lesson-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 4px solid var(--jade);
+        }
+
+        .lesson-card:active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .lesson-card.locked {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .lesson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .lesson-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .lesson-badge {
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: var(--jade);
+            color: white;
+            font-weight: 600;
+        }
+
+        .lesson-badge.locked {
+            background: var(--light-gray);
+        }
+
+        .lesson-badge.new {
+            background: var(--warning);
+        }
+
+        .lesson-description {
+            font-size: 13px;
+            color: var(--gray);
+            margin-bottom: 12px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #E8E8E8;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--jade);
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        .lesson-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .lesson-btn {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+
+        /* ===== LESSON DETAIL SCREEN ===== */
+        .lesson-detail-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
+
+        .tab-navigation {
+            display: flex;
+            background: white;
+            border-bottom: 2px solid #E8E8E8;
+            padding: 0 16px;
+            gap: 0;
+            position: sticky;
+            top: 56px;
+            z-index: 50;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 12px 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray);
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .tab-btn.active {
+            color: var(--jade);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--jade);
+        }
+
+        .modules-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .module {
+            display: none;
+        }
+
+        .module.active {
+            display: block;
+        }
+
+        /* ===== POSTER MODULE ===== */
+        .poster-header {
+            background: linear-gradient(135deg, var(--saffron), var(--gold));
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .poster-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .poster-subtitle {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .poster-objectives {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--jade);
+        }
+
+        .objectives-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            color: var(--gray);
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .objectives-list {
+            list-style: none;
+        }
+
+        .objectives-list li {
+            font-size: 14px;
+            color: var(--dark);
+            padding: 4px 0;
+        }
+
+        .objectives-list li:before {
+            content: '✓ ';
+            color: var(--success);
+            font-weight: 700;
+            margin-right: 6px;
+        }
+
+        .item-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .thai-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-family: 'Sarabun', 'Kanit', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .pronunciation {
+            font-size: 13px;
+            color: var(--gray);
+            margin-bottom: 8px;
+            font-style: italic;
+        }
+
+        .meaning {
+            font-size: 15px;
+            color: var(--dark);
+            font-weight: 600;
+            margin-bottom: 12px;
+            padding: 8px;
+            background: rgba(168,213,186,0.1);
+            border-radius: 6px;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-audio {
+            flex: 1;
+            background: var(--jade);
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-audio:active {
+            transform: scale(0.95);
+            opacity: 0.9;
+        }
+
+        .context-note {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #E8E8E8;
+            line-height: 1.5;
+        }
+
+        .context-label {
+            font-weight: 600;
+            color: var(--dark);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* ===== FLASHCARD MODULE ===== */
+        .flashcard-progress {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .flashcard-container {
+            perspective: 1000px;
+            margin-bottom: 24px;
+            height: 320px;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .flashcard-back {
+            background: linear-gradient(135deg, var(--jade), var(--saffron));
+            color: white;
+            transform: rotateY(180deg);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .flashcard-thai {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-family: 'Sarabun', 'Kanit', sans-serif;
+        }
+
+        .flashcard-pronunciation {
+            font-size: 14px;
+            margin-bottom: 8px;
+            opacity: 0.95;
+        }
+
+        .flashcard-meaning {
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .flashcard-hint {
+            font-size: 12px;
+            opacity: 0.85;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        .flashcard-actions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .btn-card-action {
+            flex: 1;
+            padding: 10px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 2px solid var(--gray);
+            background: white;
+            color: var(--dark);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-card-action.know {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .btn-card-action.know:active {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-card-action.forgot {
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+
+        .btn-card-action.forgot:active {
+            background: var(--warning);
+            color: white;
+        }
+
+        .flashcard-stats {
+            text-align: center;
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 16px;
+        }
+
+        /* ===== QUIZ MODULE ===== */
+        .quiz-question-number {
+            font-size: 13px;
+            color: var(--gray);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .quiz-question {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 20px;
+            padding: 16px;
+            background: linear-gradient(135deg, rgba(212,165,212,0.1), rgba(232,168,200,0.1));
+            border-radius: 8px;
+            border-left: 4px solid var(--purple);
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .quiz-option {
+            padding: 14px;
+            border: 2px solid #E8E8E8;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 15px;
+            color: var(--dark);
+            text-align: left;
+        }
+
+        .quiz-option:active {
+            transform: translateX(4px);
+        }
+
+        .quiz-option.selected {
+            border-color: var(--info);
+            background: rgba(138,191,212,0.1);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: rgba(139,199,143,0.1);
+            color: var(--success);
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--error);
+            background: rgba(232,132,122,0.1);
+            color: var(--error);
+        }
+
+        .quiz-feedback {
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-feedback.correct {
+            background: rgba(139,199,143,0.2);
+            color: var(--success);
+            border-left: 4px solid var(--success);
+        }
+
+        .quiz-feedback.incorrect {
+            background: rgba(232,132,122,0.2);
+            color: var(--error);
+            border-left: 4px solid var(--error);
+        }
+
+        .quiz-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-submit {
+            flex: 1;
+            background: var(--jade);
+            color: white;
+        }
+
+        /* ===== COMPLETION SCREEN ===== */
+        .completion-container {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .completion-emoji {
+            font-size: 60px;
+            margin-bottom: 16px;
+            animation: bounce 0.6s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .completion-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--jade);
+            margin-bottom: 12px;
+        }
+
+        .score-display {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--jade);
+            margin-bottom: 8px;
+        }
+
+        .score-label {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 24px;
+        }
+
+        .completion-stats {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .completion-stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #E8E8E8;
+            font-size: 14px;
+        }
+
+        .completion-stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .completion-stat-label {
+            color: var(--gray);
+        }
+
+        .completion-stat-value {
+            font-weight: 700;
+            color: var(--jade);
+        }
+
+        .completion-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (min-width: 600px) {
+            header h1 {
+                font-size: 24px;
+            }
+
+            .stats-section {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+
+            .modules-container {
+                max-width: 600px;
+                margin: 0 auto;
+                width: 100%;
+            }
+
+            .flashcard-container {
+                height: 400px;
+            }
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .item-card {
+            animation: slideIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== HOME SCREEN ===== -->
+    <div id="homeScreen" class="screen active">
+        <header>
+            <h1>🇹🇭 ThaiTalk</h1>
+            <div class="header-icon" onclick="openSettings()">⚙️</div>
+        </header>
+        <div class="home-container">
+            <div class="welcome-section">
+                <div class="logo">🌸</div>
+                <h2 class="app-title">ThaiTalk</h2>
+                <p class="welcome-subtitle">สวัสดีค่ะ! Học tiếng Thái dễ dàng</p>
+            </div>
+
+            <div class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-number" id="streakNum">0</div>
+                    <div class="stat-label">Chuỗi 🔥</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="pointsNum">0</div>
+                    <div class="stat-label">Điểm</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="lessonsNum">0</div>
+                    <div class="stat-label">Bài hoàn</div>
+                </div>
+            </div>
+
+            <div class="lessons-section">
+                <h2>📚 Bài Học Khám Phá</h2>
+                <div id="lessonsList"></div>
+            </div>
+
+            <div style="margin-top: 20px; padding: 16px; background: linear-gradient(135deg, rgba(168,213,186,0.1), rgba(244,212,168,0.1)); border-radius: 12px; border-left: 4px solid var(--jade);">
+                <strong style="color: var(--dark);">💡 Mẹo hôm nay:</strong>
+                <p style="font-size: 13px; color: var(--gray); margin-top: 8px; line-height: 1.5;">Trong tiếng Thái, "ค่ะ" (khá) được phụ nữ sử dụng sau câu, "ครับ" (khráp) là cho nam. Đây là hạt pháp quan trọng!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== LESSON DETAIL SCREEN ===== -->
+    <div id="lessonScreen" class="screen">
+        <header>
+            <button class="btn-back" onclick="goHome()">← Quay lại</button>
+            <h1 id="lessonTitle">Bài Học</h1>
+            <div style="width: 40px;"></div>
+        </header>
+
+        <div class="tab-navigation">
+            <button class="tab-btn active" onclick="switchTab('poster')">Bài Học</button>
+            <button class="tab-btn" onclick="switchTab('flashcard')">Thẻ</button>
+            <button class="tab-btn" onclick="switchTab('quiz')">Kiểm Tra</button>
+        </div>
+
+        <div class="lesson-detail-container">
+            <div class="modules-container">
+                <!-- POSTER MODULE -->
+                <div id="posterModule" class="module active">
+                    <div id="posterContent"></div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button class="btn-primary" onclick="markPosterViewed()">✓ Đã xem</button>
+                    </div>
+                </div>
+
+                <!-- FLASHCARD MODULE -->
+                <div id="flashcardModule" class="module">
+                    <div class="flashcard-progress">
+                        <span id="flashcardCount">0/0</span> thẻ
+                    </div>
+                    <div class="flashcard-container" id="flashcardContainer">
+                        <div class="flashcard" id="flashcard">
+                            <div class="flashcard-face flashcard-front">
+                                <div style="text-align: center; width: 100%;">
+                                    <div class="flashcard-thai" id="fcThai">สวัสดีค่ะ</div>
+                                    <div class="flashcard-pronunciation" id="fcPronunciation">Sa-wạt-dii khá</div>
+                                    <button class="btn-audio" onclick="speakThai(document.getElementById('fcThai').textContent)">🔊 Nghe</button>
+                                </div>
+                            </div>
+                            <div class="flashcard-face flashcard-back">
+                                <div style="text-align: center; width: 100%;">
+                                    <div class="flashcard-meaning" id="fcMeaning">Xin chào (lễ độ)</div>
+                                    <div class="flashcard-hint" id="fcHint"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flashcard-actions">
+                        <button class="btn-card-action know" onclick="markCardKnown()">✓ Biết</button>
+                        <button class="btn-card-action forgot" onclick="markCardForgot()">✗ Quên</button>
+                    </div>
+                    <div class="flashcard-stats">
+                        <p>Đã học: <strong id="masteredCount">0</strong> | Cần ôn: <strong id="remainingCount">0</strong></p>
+                    </div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button class="btn-primary" id="flashcardCompleteBtn" onclick="goToQuiz()" style="display: none;">Bắt đầu Kiểm Tra →</button>
+                    </div>
+                </div>
+
+                <!-- QUIZ MODULE -->
+                <div id="quizModule" class="module">
+                    <div class="quiz-question-number" id="quizProgress"></div>
+                    <div id="quizContent"></div>
+                    <div class="quiz-feedback" id="quizFeedback"></div>
+                    <div class="quiz-actions">
+                        <button class="btn-primary btn-submit" id="quizSubmitBtn" onclick="submitQuizAnswer()">Trả Lời</button>
+                        <button class="btn-secondary btn-submit" id="quizNextBtn" onclick="nextQuizQuestion()" style="display: none;">Câu Tiếp →</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== COMPLETION SCREEN ===== -->
+    <div id="completionScreen" class="screen">
+        <header>
+            <h1>🎉 Hoàn Thành!</h1>
+            <div style="width: 40px;"></div>
+        </header>
+        <div class="completion-container">
+            <div class="completion-emoji" id="completionEmoji">🎉</div>
+            <h2 class="completion-title">Xuất sắc!</h2>
+            <div class="score-display" id="finalScore">80%</div>
+            <p class="score-label">Bạn đã hoàn thành bài học này</p>
+
+            <div class="completion-stats">
+                <div class="completion-stat-row">
+                    <span class="completion-stat-label">Điểm kiểm tra:</span>
+                    <span class="completion-stat-value" id="completionScoreValue">80%</span>
+                </div>
+                <div class="completion-stat-row">
+                    <span class="completion-stat-label">Câu hỏi đúng:</span>
+                    <span class="completion-stat-value" id="completionCorrectValue">4/5</span>
+                </div>
+                <div class="completion-stat-row">
+                    <span class="completion-stat-label">Thẻ nắm vững:</span>
+                    <span class="completion-stat-value" id="completionMasteredValue">5</span>
+                </div>
+            </div>
+
+            <div class="completion-actions">
+                <button class="btn-primary" onclick="goHome()">← Quay về Trang Chủ</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== TTS FUNCTION =====
+        function speakThai(thaiText) {
+            if (!window.speechSynthesis) {
+                console.log('Speech Synthesis not supported in this browser');
+                return;
+            }
+
+            // Cancel any ongoing speech
+            window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(thaiText);
+            utterance.lang = 'th-TH';
+
+            // Try to get Thai voice
+            let voices = window.speechSynthesis.getVoices();
+            if (voices.length === 0) {
+                // Voices might not be loaded yet
+                window.speechSynthesis.onvoiceschanged = function() {
+                    voices = window.speechSynthesis.getVoices();
+                    const thaiVoice = voices.find(voice => voice.lang.startsWith('th'));
+                    if (thaiVoice) utterance.voice = thaiVoice;
+                    window.speechSynthesis.speak(utterance);
+                };
+            } else {
+                const thaiVoice = voices.find(voice => voice.lang.startsWith('th'));
+                if (thaiVoice) {
+                    utterance.voice = thaiVoice;
+                }
+            }
+
+            utterance.rate = 0.9; // Slightly slower for clarity
+            utterance.pitch = 1.0;
+            utterance.volume = 1.0;
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // ===== DATA STRUCTURE (Easy to expand!) =====
+        const lessonsData = [
+            {
+                id: 'lesson_001',
+                title: 'Lời Chào Cơ Bản',
+                description: 'Học cách chào hỏi lễ độ trong tiếng Thái',
+                category: 'greetings',
+                difficulty: 'A0',
+                estimatedTime: '8 phút',
+                backgroundGradient: 'linear-gradient(135deg, #F4D4A8, #F9E79F)',
+                items: [
+                    {
+                        id: 'item_001',
+                        thaiText: 'สวัสดีค่ะ',
+                        vietnamesePronunciation: 'Sa-wạt-dii khá (nữ) / khráp (nam)',
+                        vietnameseMeaning: 'Xin chào (lễ độ)',
+                        context: 'Dùng để chào bất kỳ ai, bất kỳ lúc nào'
+                    },
+                    {
+                        id: 'item_002',
+                        thaiText: 'สบายดีไหม',
+                        vietnamesePronunciation: 'Sa-bai-dii mái?',
+                        vietnameseMeaning: 'Bạn khỏe không?',
+                        context: 'Câu hỏi theo sau lời chào, rất thân thiện'
+                    },
+                    {
+                        id: 'item_003',
+                        thaiText: 'ลาก่อน',
+                        vietnamesePronunciation: 'La-gon',
+                        vietnameseMeaning: 'Tạm biệt',
+                        context: 'Nói khi chia tay hoặc kết thúc cuộc gặp'
+                    },
+                    {
+                        id: 'item_004',
+                        thaiText: 'ขอบคุณ',
+                        vietnamesePronunciation: 'Khop-khun',
+                        vietnameseMeaning: 'Cảm ơn',
+                        context: 'Tỏ lòng biết ơn, rất quan trọng'
+                    },
+                    {
+                        id: 'item_005',
+                        thaiText: 'ยินดีเพื่อคุณ',
+                        vietnamesePronunciation: 'Yin-dii phwea khun',
+                        vietnameseMeaning: 'Rất vui khi gặp bạn',
+                        context: 'Nói khi gặp ai đó lần đầu'
+                    }
+                ],
+                quizQuestions: [
+                    {
+                        id: 'q1',
+                        thaiQuestion: 'สวัสดีค่ะ',
+                        vietnameseQuestion: '"สวัสดีค่ะ" có nghĩa là gì?',
+                        options: ['Tạm biệt', 'Xin chào (lễ độ)', 'Cảm ơn', 'Bạn khỏe không?'],
+                        correctIndex: 1,
+                        hint: 'Đây là cách chào hỏi lễ độ'
+                    },
+                    {
+                        id: 'q2',
+                        thaiQuestion: 'สบายดีไหม',
+                        vietnameseQuestion: '"สบายดีไหม" dùng để làm gì?',
+                        options: ['Chào hỏi', 'Hỏi người khác khỏe không', 'Cảm ơn', 'Tạm biệt'],
+                        correctIndex: 1,
+                        hint: 'Câu hỏi theo sau lời chào'
+                    },
+                    {
+                        id: 'q3',
+                        thaiQuestion: 'ขอบคุณ',
+                        vietnameseQuestion: '"ขอบคุณ" có nghĩa là?',
+                        options: ['Xin chào', 'Tạm biệt', 'Cảm ơn', 'Vui lắm'],
+                        correctIndex: 2,
+                        hint: 'Tỏ lòng biết ơn'
+                    },
+                    {
+                        id: 'q4',
+                        thaiQuestion: 'ลาก่อน',
+                        vietnameseQuestion: 'Khi chia tay bạn nói gì?',
+                        options: ['สวัสดีค่ะ', 'ลาก่อน', 'ขอบคุณ', 'สบายดีไหม'],
+                        correctIndex: 1,
+                        hint: 'Từ tạm biệt'
+                    },
+                    {
+                        id: 'q5',
+                        thaiQuestion: 'ยินดีเพื่อคุณ',
+                        vietnameseQuestion: '"ยินดีเพื่อคุณ" được nói lúc nào?',
+                        options: ['Chia tay', 'Gặp ai đó lần đầu', 'Tạm biệt', 'Hỏi khỏe'],
+                        correctIndex: 1,
+                        hint: 'Gặp người lần đầu'
+                    }
+                ]
+            },
+            {
+                id: 'lesson_002',
+                title: 'Số và Tiền Tệ',
+                description: 'Học số đếm và tiền tệ cơ bản',
+                category: 'numbers',
+                difficulty: 'A0',
+                estimatedTime: '10 phút',
+                backgroundGradient: 'linear-gradient(135deg, #A8D5BA, #D4A5D4)',
+                items: [
+                    {
+                        id: 'item_101',
+                        thaiText: 'หนึ่ง',
+                        vietnamesePronunciation: 'Nùng',
+                        vietnameseMeaning: 'Một (1)',
+                        context: 'Số cơ bản, dùng để đếm'
+                    },
+                    {
+                        id: 'item_102',
+                        thaiText: 'สอง',
+                        vietnamesePronunciation: 'Song',
+                        vietnameseMeaning: 'Hai (2)',
+                        context: 'Số cơ bản'
+                    },
+                    {
+                        id: 'item_103',
+                        thaiText: 'สาม',
+                        vietnamesePronunciation: 'Săm',
+                        vietnameseMeaning: 'Ba (3)',
+                        context: 'Số cơ bản'
+                    },
+                    {
+                        id: 'item_104',
+                        thaiText: 'ห้า',
+                        vietnamesePronunciation: 'Hâ',
+                        vietnameseMeaning: 'Năm (5)',
+                        context: 'Số quan trọng'
+                    },
+                    {
+                        id: 'item_105',
+                        thaiText: 'สิบ',
+                        vietnamesePronunciation: 'Sìp',
+                        vietnameseMeaning: 'Mười (10)',
+                        context: 'Số hàng chục'
+                    }
+                ],
+                quizQuestions: [
+                    {
+                        id: 'q101',
+                        thaiQuestion: 'หนึ่ง',
+                        vietnameseQuestion: 'เลข "หนึ่ง" là số mấy?',
+                        options: ['2', '1', '3', '10'],
+                        correctIndex: 1,
+                        hint: 'Số cơ bản đầu tiên'
+                    },
+                    {
+                        id: 'q102',
+                        thaiQuestion: 'สอง',
+                        vietnameseQuestion: '"สอง" là?',
+                        options: ['1', '3', '2', '5'],
+                        correctIndex: 2,
+                        hint: 'Sau một'
+                    },
+                    {
+                        id: 'q103',
+                        thaiQuestion: 'ห้า',
+                        vietnameseQuestion: '"ห้า" tương ứng với?',
+                        options: ['3', '10', '5', '2'],
+                        correctIndex: 2,
+                        hint: 'Nửa của 10'
+                    },
+                    {
+                        id: 'q104',
+                        thaiQuestion: 'สิบ',
+                        vietnameseQuestion: '"สิบ" nghĩa là?',
+                        options: ['5', '1', '20', '10'],
+                        correctIndex: 3,
+                        hint: 'Một chục'
+                    },
+                    {
+                        id: 'q105',
+                        thaiQuestion: 'สาม',
+                        vietnameseQuestion: '"สาม" bằng bao nhiêu?',
+                        options: ['2', '3', '5', '1'],
+                        correctIndex: 1,
+                        hint: 'Sau hai'
+                    }
+                ]
+            },
+            {
+                id: 'lesson_003',
+                title: 'Ăn Uống',
+                description: 'Từ vựng về đồ ăn, uống phổ biến',
+                category: 'food',
+                difficulty: 'A0',
+                estimatedTime: '9 phút',
+                backgroundGradient: 'linear-gradient(135deg, #E8A8C8, #F9E79F)',
+                items: [
+                    {
+                        id: 'item_201',
+                        thaiText: 'ข้าว',
+                        vietnamesePronunciation: 'Khâo',
+                        vietnameseMeaning: 'Cơm / Gạo',
+                        context: 'Thức ăn chính của Thái Lan'
+                    },
+                    {
+                        id: 'item_202',
+                        thaiText: 'กาแฟ',
+                        vietnamesePronunciation: 'Ka-fae',
+                        vietnameseMeaning: 'Cà phê',
+                        context: 'Đồ uống phổ biến vào sáng'
+                    },
+                    {
+                        id: 'item_203',
+                        thaiText: 'น้ำ',
+                        vietnamesePronunciation: 'Nám',
+                        vietnameseMeaning: 'Nước',
+                        context: 'Đồ uống cơ bản'
+                    },
+                    {
+                        id: 'item_204',
+                        thaiText: 'ไก่',
+                        vietnamesePronunciation: 'Gài',
+                        vietnameseMeaning: 'Gà',
+                        context: 'Loại thịt phổ biến'
+                    },
+                    {
+                        id: 'item_205',
+                        thaiText: 'ร้านอาหาร',
+                        vietnamesePronunciation: 'Ráan-aahăn',
+                        vietnameseMeaning: 'Nhà hàng',
+                        context: 'Nơi ăn uống'
+                    }
+                ],
+                quizQuestions: [
+                    {
+                        id: 'q201',
+                        thaiQuestion: 'ข้าว',
+                        vietnameseQuestion: '"ข้าว" là gì?',
+                        options: ['Nước', 'Cơm / Gạo', 'Cà phê', 'Gà'],
+                        correctIndex: 1,
+                        hint: 'Thức ăn chính'
+                    },
+                    {
+                        id: 'q202',
+                        thaiQuestion: 'กาแฟ',
+                        vietnameseQuestion: '"กาแฟ" là gì?',
+                        options: ['Nước', 'Cơm', 'Cà phê', 'Gà'],
+                        correctIndex: 2,
+                        hint: 'Đồ uống buổi sáng'
+                    },
+                    {
+                        id: 'q203',
+                        thaiQuestion: 'ไก่',
+                        vietnameseQuestion: '"ไก่" nghĩa là?',
+                        options: ['Cà phê', 'Gà', 'Nước', 'Cơm'],
+                        correctIndex: 1,
+                        hint: 'Loại thịt'
+                    },
+                    {
+                        id: 'q204',
+                        thaiQuestion: 'น้ำ',
+                        vietnameseQuestion: '"น้ำ" là?',
+                        options: ['Cà phê', 'Cơm', 'Nước', 'Gà'],
+                        correctIndex: 2,
+                        hint: 'Đồ uống cơ bản'
+                    },
+                    {
+                        id: 'q205',
+                        thaiQuestion: 'ร้านอาหาร',
+                        vietnameseQuestion: '"ร้านอาหาร" là gì?',
+                        options: ['Cửa hàng', 'Nhà hàng', 'Quầy bar', 'Cà phê'],
+                        correctIndex: 1,
+                        hint: 'Nơi ăn cơm'
+                    }
+                ]
+            },
+            {
+                id: 'lesson_004',
+                title: 'Tự Giới Thiệu',
+                description: 'Học cách giới thiệu bản thân bằng tiếng Thái',
+                category: 'self-introduction',
+                difficulty: 'A0',
+                estimatedTime: '8 phút',
+                backgroundGradient: 'linear-gradient(135deg, #D4A5D4, #E8A8C8)',
+                items: [
+                    {
+                        id: 'item_301',
+                        thaiText: 'ฉันชื่อ...',
+                        vietnamesePronunciation: 'Chăn chùu...',
+                        vietnameseMeaning: 'Tôi tên là...',
+                        context: 'Bắt đầu giới thiệu tên mình'
+                    },
+                    {
+                        id: 'item_302',
+                        thaiText: 'ฉันมาจากเวียดนาม',
+                        vietnamesePronunciation: 'Chăn maa jàak Viet-nam',
+                        vietnameseMeaning: 'Tôi đến từ Việt Nam',
+                        context: 'Giới thiệu quốc tịch'
+                    },
+                    {
+                        id: 'item_303',
+                        thaiText: 'ฉันนักท่องเที่ยว',
+                        vietnamesePronunciation: 'Chăn nák-thong-thîao',
+                        vietnameseMeaning: 'Tôi là du khách',
+                        context: 'Giới thiệu tư cách'
+                    },
+                    {
+                        id: 'item_304',
+                        thaiText: 'อายุเท่าไหร่',
+                        vietnamesePronunciation: 'Aa-yu thâo-rai?',
+                        vietnameseMeaning: 'Bao nhiêu tuổi?',
+                        context: 'Hỏi tuổi người khác'
+                    },
+                    {
+                        id: 'item_305',
+                        thaiText: 'ฉันอายุ 25 ปี',
+                        vietnamesePronunciation: 'Chăn aa-yu yîi-sip-hâ pii',
+                        vietnameseMeaning: 'Tôi 25 tuổi',
+                        context: 'Trả lời câu hỏi về tuổi'
+                    }
+                ],
+                quizQuestions: [
+                    {
+                        id: 'q301',
+                        thaiQuestion: 'ฉันชื่อ',
+                        vietnameseQuestion: '"ฉันชื่อ" có nghĩa là?',
+                        options: ['Bạn là ai?', 'Tôi tên là...', 'Tôi đến từ...', 'Tôi là du khách'],
+                        correctIndex: 1,
+                        hint: 'Bắt đầu giới thiệu tên'
+                    },
+                    {
+                        id: 'q302',
+                        thaiQuestion: 'ฉันมาจากเวียดนาม',
+                        vietnameseQuestion: '"ฉันมาจากเวียดนาม" dùng để?',
+                        options: ['Nói tên', 'Giới thiệu tuổi', 'Giới thiệu quốc tịch', 'Hỏi tên'],
+                        correctIndex: 2,
+                        hint: 'Giới thiệu từ đâu'
+                    },
+                    {
+                        id: 'q303',
+                        thaiQuestion: 'ฉันนักท่องเที่ยว',
+                        vietnameseQuestion: '"ฉันนักท่องเที่ยว" là gì?',
+                        options: ['Tôi là thương gia', 'Tôi là du khách', 'Tôi sống ở Thái', 'Tôi là lao động'],
+                        correctIndex: 1,
+                        hint: 'Giới thiệu tư cách'
+                    },
+                    {
+                        id: 'q304',
+                        thaiQuestion: 'อายุเท่าไหร่',
+                        vietnameseQuestion: 'Làm thế nào hỏi tuổi ai đó?',
+                        options: ['ชื่ออะไร', 'มาจากไหน', 'อายุเท่าไหร่', 'ทำไมอย่างไร'],
+                        correctIndex: 2,
+                        hint: 'Câu hỏi về tuổi'
+                    },
+                    {
+                        id: 'q305',
+                        thaiQuestion: 'ฉันอายุ 25 ปี',
+                        vietnameseQuestion: 'Câu "ฉันอายุ 25 ปี" có nghĩa?',
+                        options: ['Tôi 52 tuổi', 'Tôi 25 tuổi', 'Tôi từ 25...', 'Tôi làm việc 25 năm'],
+                        correctIndex: 1,
+                        hint: 'Trả lời về tuổi'
+                    }
+                ]
+            },
+            {
+                id: 'lesson_005',
+                title: 'Đặt Hàng Tại Nhà Hàng',
+                description: 'Học cách đặt hàng và gọi đồ ăn tại nhà hàng',
+                category: 'ordering-food',
+                difficulty: 'A1',
+                estimatedTime: '10 phút',
+                backgroundGradient: 'linear-gradient(135deg, #F9E79F, #E8A8C8)',
+                items: [
+                    {
+                        id: 'item_401',
+                        thaiText: 'ขอเมนูด้วยค่ะ',
+                        vietnamesePronunciation: 'Khor me-nuu dûay khá',
+                        vietnameseMeaning: 'Cho tôi xem thực đơn',
+                        context: 'Khi vào nhà hàng, bước đầu tiên'
+                    },
+                    {
+                        id: 'item_402',
+                        thaiText: 'ฉันต้องการ...',
+                        vietnamesePronunciation: 'Chăn tông-gaan...',
+                        vietnameseMeaning: 'Tôi muốn...',
+                        context: 'Dùng để đặt hàng'
+                    },
+                    {
+                        id: 'item_403',
+                        thaiText: 'ราคาเท่าไหร่',
+                        vietnamesePronunciation: 'Raa-khaa thâo-rai?',
+                        vietnameseMeaning: 'Giá bao nhiêu?',
+                        context: 'Hỏi giá cả'
+                    },
+                    {
+                        id: 'item_404',
+                        thaiText: 'ไม่ใส่เผ็ด',
+                        vietnamesePronunciation: 'Mài sài phèt',
+                        vietnameseMeaning: 'Không cay',
+                        context: 'Yêu cầu đặc biệt về mức độ cay'
+                    },
+                    {
+                        id: 'item_405',
+                        thaiText: 'เรียกข้าวด้วย',
+                        vietnamesePronunciation: 'Riiak khâo dûay',
+                        vietnameseMeaning: 'Gọi thêm cơm nữa',
+                        context: 'Yêu cầu thêm đồ ăn'
+                    }
+                ],
+                quizQuestions: [
+                    {
+                        id: 'q401',
+                        thaiQuestion: 'ขอเมนูด้วยค่ะ',
+                        vietnameseQuestion: '"ขอเมนูด้วยค่ะ" có nghĩa?',
+                        options: ['Cảm ơn', 'Cho xem thực đơn', 'Tôi muốn...', 'Giá bao nhiêu'],
+                        correctIndex: 1,
+                        hint: 'Bước đầu tiên'
+                    },
+                    {
+                        id: 'q402',
+                        thaiQuestion: 'ฉันต้องการ',
+                        vietnameseQuestion: '"ฉันต้องการ" dùng để?',
+                        options: ['Hỏi giá', 'Cảm ơn', 'Đặt hàng', 'Chào'],
+                        correctIndex: 2,
+                        hint: 'Khi gọi đồ ăn'
+                    },
+                    {
+                        id: 'q403',
+                        thaiQuestion: 'ราคาเท่าไหร่',
+                        vietnameseQuestion: 'Hỏi giá cả như thế nào?',
+                        options: ['ฉันต้องการ', 'ขอเมนู', 'ราคาเท่าไหร่', 'ไม่ใส่เผ็ด'],
+                        correctIndex: 2,
+                        hint: 'Câu hỏi về giá'
+                    },
+                    {
+                        id: 'q404',
+                        thaiQuestion: 'ไม่ใส่เผ็ด',
+                        vietnameseQuestion: '"ไม่ใส่เผ็ด" là yêu cầu gì?',
+                        options: ['Thêm cơm', 'Không cay', 'Thêm gia vị', 'Tôi muốn'],
+                        correctIndex: 1,
+                        hint: 'Về mức độ cay'
+                    },
+                    {
+                        id: 'q405',
+                        thaiQuestion: 'เรียกข้าวด้วย',
+                        vietnameseQuestion: '"เรียกข้าวด้วย" có nghĩa?',
+                        options: ['Không cay', 'Gọi thêm cơm', 'Giá bao nhiêu', 'Cảm ơn'],
+                        correctIndex: 1,
+                        hint: 'Yêu cầu thêm'
+                    }
+                ]
+            },
+            {
+                id: 'lesson_006',
+                title: 'Mua Sắm Ở Chợ Đêm',
+                description: 'Từ vựng và cách giao dịch tại chợ đêm Thái',
+                category: 'night-market',
+                difficulty: 'A1',
+                estimatedTime: '10 phút',
+                backgroundGradient: 'linear-gradient(135deg, #A8D5BA, #F4D4A8)',
+                items: [
+                    {
+                        id: 'item_501',
+                        thaiText: 'เท่าไหร่',
+                        vietnamesePronunciation: 'Thâo-rai?',
+                        vietnameseMeaning: 'Bao nhiêu?',
+                        context: 'Hỏi giá, dùng trong chợ'
+                    },
+                    {
+                        id: 'item_502',
+                        thaiText: 'แพงไป',
+                        vietnamesePronunciation: 'Phaeng pai',
+                        vietnameseMeaning: 'Quá đắt',
+                        context: 'Phản ứng khi giá cao'
+                    },
+                    {
+                        id: 'item_503',
+                        thaiText: 'ลดราคาด้วย',
+                        vietnamesePronunciation: 'Lót raa-khaa dûay',
+                        vietnameseMeaning: 'Giảm giá đi',
+                        context: 'Đàm phán giá'
+                    },
+                    {
+                        id: 'item_504',
+                        thaiText: 'ขออีก',
+                        vietnamesePronunciation: 'Khor îik',
+                        vietnameseMeaning: 'Cho tôi thêm cái',
+                        context: 'Mua thêm một cái khác'
+                    },
+                    {
+                        id: 'item_505',
+                        thaiText: 'ซื้อ 2 ชิ้น',
+                        vietnamesePronunciation: 'Súu song chîin',
+                        vietnameseMeaning: 'Mua 2 cái',
+                        context: 'Chỉ định số lượng'
+                    }
+                ],
+                quizQuestions: [
+                    {
+                        id: 'q501',
+                        thaiQuestion: 'เท่าไหร่',
+                        vietnameseQuestion: '"เท่าไหร่" là gì?',
+                        options: ['Giảm giá', 'Bao nhiêu?', 'Quá đắt', 'Cho thêm'],
+                        correctIndex: 1,
+                        hint: 'Hỏi giá cả'
+                    },
+                    {
+                        id: 'q502',
+                        thaiQuestion: 'แพงไป',
+                        vietnameseQuestion: '"แพงไป" có nghĩa?',
+                        options: ['Rẻ', 'Quá đắt', 'Được', 'Bao nhiêu'],
+                        correctIndex: 1,
+                        hint: 'Phản ứng giá cao'
+                    },
+                    {
+                        id: 'q503',
+                        thaiQuestion: 'ลดราคาด้วย',
+                        vietnameseQuestion: 'Làm sao để đàm phán giá?',
+                        options: ['ซื้อ 2 ชิ้น', 'ลดราคาด้วย', 'แพงไป', 'เท่าไหร่'],
+                        correctIndex: 1,
+                        hint: 'Yêu cầu giảm'
+                    },
+                    {
+                        id: 'q504',
+                        thaiQuestion: 'ขออีก',
+                        vietnameseQuestion: '"ขออีก" là gì?',
+                        options: ['Giảm giá', 'Cho tôi thêm cái', 'Bao nhiêu', 'Quá đắt'],
+                        correctIndex: 1,
+                        hint: 'Muốn thêm'
+                    },
+                    {
+                        id: 'q505',
+                        thaiQuestion: 'ซื้อ 2 ชิ้น',
+                        vietnameseQuestion: '"ซื้อ 2 ชิ้น" có nghĩa?',
+                        options: ['Giảm giá', 'Mua 1 cái', 'Mua 2 cái', 'Quá đắt'],
+                        correctIndex: 2,
+                        hint: 'Chỉ định số lượng'
+                    }
+                ]
+            },
+            {
+                id: 'lesson_007',
+                title: 'Đi Taxi / BTS / MRT',
+                description: 'Từ vựng và cách giao tiếp khi sử dụng giao thông công cộng',
+                category: 'transportation',
+                difficulty: 'A1',
+                estimatedTime: '10 phút',
+                backgroundGradient: 'linear-gradient(135deg, #8ABFD4, #A8D5BA)',
+                items: [
+                    {
+                        id: 'item_601',
+                        thaiText: 'เรียกแท็กซี่',
+                        vietnamesePronunciation: 'Riiak thaek-si',
+                        vietnameseMeaning: 'Gọi taxi',
+                        context: 'Để đón taxi trên đường'
+                    },
+                    {
+                        id: 'item_602',
+                        thaiText: 'ไปที่...',
+                        vietnamesePronunciation: 'Pai thîi...',
+                        vietnameseMeaning: 'Đi tới...',
+                        context: 'Nói địa chỉ cho taxi'
+                    },
+                    {
+                        id: 'item_603',
+                        thaiText: 'สถานีรถไฟฟ้า',
+                        vietnamesePronunciation: 'Sa-thaa-nii rót-fai-fâi',
+                        vietnameseMeaning: 'Ga BTS',
+                        context: 'Ga tàu điện ngầm/trên cao'
+                    },
+                    {
+                        id: 'item_604',
+                        thaiText: 'ขึ้นรถกี่บาท',
+                        vietnamesePronunciation: 'Khûin rót gii bàat?',
+                        vietnameseMeaning: 'Tiền xe bao nhiêu?',
+                        context: 'Hỏi giá vé'
+                    },
+                    {
+                        id: 'item_605',
+                        thaiText: 'ลงตรงนี้',
+                        vietnamesePronunciation: 'Long trong nii',
+                        vietnameseMeaning: 'Xuống ở đây',
+                        context: 'Chỉ nơi muốn xuống'
+                    }
+                ],
+                quizQuestions: [
+                    {
+                        id: 'q601',
+                        thaiQuestion: 'เรียกแท็กซี่',
+                        vietnameseQuestion: '"เรียกแท็กซี่" có nghĩa?',
+                        options: ['Đi train', 'Gọi taxi', 'Xuống', 'Bao nhiêu'],
+                        correctIndex: 1,
+                        hint: 'Gọi xe'
+                    },
+                    {
+                        id: 'q602',
+                        thaiQuestion: 'ไปที่',
+                        vietnameseQuestion: '"ไปที่" dùng để?',
+                        options: ['Xuống', 'Nói địa chỉ', 'Gọi xe', 'Hỏi giá'],
+                        correctIndex: 1,
+                        hint: 'Nói đích đến'
+                    },
+                    {
+                        id: 'q603',
+                        thaiQuestion: 'สถานีรถไฟฟ้า',
+                        vietnameseQuestion: '"สถานีรถไฟฟ้า" là?',
+                        options: ['Xe buýt', 'Ga BTS', 'Taxi', 'Cảng'],
+                        correctIndex: 1,
+                        hint: 'Ga tàu'
+                    },
+                    {
+                        id: 'q604',
+                        thaiQuestion: 'ขึ้นรถกี่บาท',
+                        vietnameseQuestion: 'Hỏi tiền xe như thế nào?',
+                        options: ['ไปที่', 'ขึ้นรถกี่บาท', 'ลงตรงนี้', 'สถานี'],
+                        correctIndex: 1,
+                        hint: 'Hỏi giá vé'
+                    },
+                    {
+                        id: 'q605',
+                        thaiQuestion: 'ลงตรงนี้',
+                        vietnameseQuestion: '"ลงตรงนี้" là gì?',
+                        options: ['Gọi taxi', 'Bao nhiêu tiền', 'Xuống ở đây', 'Đi tới'],
+                        correctIndex: 2,
+                        hint: 'Nơi xuống'
+                    }
+                ]
+            },
+            {
+                id: 'lesson_008',
+                title: 'Nhận Phòng Khách Sạn',
+                description: 'Từ vựng và hội thoại khi check-in khách sạn',
+                category: 'hotel-checkin',
+                difficulty: 'A1',
+                estimatedTime: '9 phút',
+                backgroundGradient: 'linear-gradient(135deg, #F4D4A8, #D4A5D4)',
+                items: [
+                    {
+                        id: 'item_701',
+                        thaiText: 'ฉันมีการจอง',
+                        vietnamesePronunciation: 'Chăn mii gaan jong',
+                        vietnameseMeaning: 'Tôi đã đặt phòng',
+                        context: 'Thông báo khi lên nhận phòng'
+                    },
+                    {
+                        id: 'item_702',
+                        thaiText: 'ห้องสำหรับ...',
+                        vietnamesePronunciation: 'Hông sam-ráp...',
+                        vietnameseMeaning: 'Phòng cho...',
+                        context: 'Chỉ định số người, ngày cư trú'
+                    },
+                    {
+                        id: 'item_703',
+                        thaiText: 'ราคา 1 คืน',
+                        vietnamesePronunciation: 'Raa-khaa 1 khuen',
+                        vietnameseMeaning: 'Giá 1 đêm',
+                        context: 'Hỏi giá phòng'
+                    },
+                    {
+                        id: 'item_704',
+                        thaiText: 'เข้าพักตั้งแต่วันไหน',
+                        vietnamesePronunciation: 'Khâo phák tâng-tàe wan rai?',
+                        vietnameseMeaning: 'Từ ngày nào vào ở?',
+                        context: 'Hỏi ngày nhận phòng'
+                    },
+                    {
+                        id: 'item_705',
+                        thaiText: 'กุญแจห้อง',
+                        vietnamesePronunciation: 'Gun-jae hông',
+                        vietnameseMeaning: 'Chìa khóa phòng',
+                        context: 'Khi nhận chìa khóa'
+                    }
+                ],
+                quizQuestions: [
+                    {
+                        id: 'q701',
+                        thaiQuestion: 'ฉันมีการจอง',
+                        vietnameseQuestion: '"ฉันมีการจอง" có nghĩa?',
+                        options: ['Phòng trống', 'Tôi đã đặt phòng', 'Giá bao nhiêu', 'Chìa khóa'],
+                        correctIndex: 1,
+                        hint: 'Thông báo đặt phòng'
+                    },
+                    {
+                        id: 'q702',
+                        thaiQuestion: 'ห้องสำหรับ',
+                        vietnameseQuestion: '"ห้องสำหรับ" dùng để?',
+                        options: ['Hỏi giá', 'Chỉ định phòng', 'Yêu cầu chìa khóa', 'Hỏi ngày'],
+                        correctIndex: 1,
+                        hint: 'Mô tả phòng'
+                    },
+                    {
+                        id: 'q703',
+                        thaiQuestion: 'ราคา 1 คืน',
+                        vietnameseQuestion: 'Hỏi giá phòng 1 đêm?',
+                        options: ['ห้องสำหรับ', 'กุญแจห้อง', 'ราคา 1 คืน', 'เข้าพัก'],
+                        correctIndex: 2,
+                        hint: 'Hỏi giá'
+                    },
+                    {
+                        id: 'q704',
+                        thaiQuestion: 'เข้าพักตั้งแต่วันไหน',
+                        vietnameseQuestion: '"เข้าพักตั้งแต่วันไหน" là?',
+                        options: ['Giá bao nhiêu', 'Từ ngày nào vào ở', 'Chìa khóa ở đâu', 'Phòng gì'],
+                        correctIndex: 1,
+                        hint: 'Hỏi ngày'
+                    },
+                    {
+                        id: 'q705',
+                        thaiQuestion: 'กุญแจห้อง',
+                        vietnameseQuestion: '"กุญแจห้อง" là?',
+                        options: ['Phòng cho 2 người', 'Giá 1 đêm', 'Chìa khóa phòng', 'Từ ngày nào'],
+                        correctIndex: 2,
+                        hint: 'Khóa cửa'
+                    }
+                ]
+            },
+            {
+                id: 'lesson_009',
+                title: 'Trả Phòng Khách Sạn',
+                description: 'Từ vựng và quy trình check-out khách sạn',
+                category: 'hotel-checkout',
+                difficulty: 'A1',
+                estimatedTime: '8 phút',
+                backgroundGradient: 'linear-gradient(135deg, #E8A8C8, #A8D5BA)',
+                items: [
+                    {
+                        id: 'item_801',
+                        thaiText: 'ฉันต้องการเช็คเอาท์',
+                        vietnamesePronunciation: 'Chăn tông-gaan chek-out',
+                        vietnameseMeaning: 'Tôi muốn check-out',
+                        context: 'Khi chuẩn bị rời khách sạn'
+                    },
+                    {
+                        id: 'item_802',
+                        thaiText: 'เช็คบิล',
+                        vietnamesePronunciation: 'Chek bin',
+                        vietnameseMeaning: 'Kiểm tra hóa đơn',
+                        context: 'Xem lại chi tiêu'
+                    },
+                    {
+                        id: 'item_803',
+                        thaiText: 'รวมทั้งหมด',
+                        vietnamesePronunciation: 'Ruam thâng-mót',
+                        vietnameseMeaning: 'Tổng cộng',
+                        context: 'Khi được báo tổng tiền'
+                    },
+                    {
+                        id: 'item_804',
+                        thaiText: 'ใช้บัตรเครดิต',
+                        vietnamesePronunciation: 'Chuay bàt khre-dit',
+                        vietnameseMeaning: 'Dùng thẻ tín dụng',
+                        context: 'Phương thức thanh toán'
+                    },
+                    {
+                        id: 'item_805',
+                        thaiText: 'ห้องไร้ปัญหา',
+                        vietnamesePronunciation: 'Hông rai pan-haa',
+                        vietnameseMeaning: 'Phòng không vấn đề',
+                        context: 'Khi thanh toán, tỏ sự hài lòng'
+                    }
+                ],
+                quizQuestions: [
+                    {
+                        id: 'q801',
+                        thaiQuestion: 'ฉันต้องการเช็คเอาท์',
+                        vietnameseQuestion: '"ฉันต้องการเช็คเอาท์" là?',
+                        options: ['Đặt phòng', 'Muốn check-out', 'Kiểm tra hóa đơn', 'Dùng thẻ'],
+                        correctIndex: 1,
+                        hint: 'Khi rời khách sạn'
+                    },
+                    {
+                        id: 'q802',
+                        thaiQuestion: 'เช็คบิล',
+                        vietnameseQuestion: '"เช็คบิล" có nghĩa?',
+                        options: ['Tổng tiền', 'Kiểm tra hóa đơn', 'Dùng thẻ', 'Check-out'],
+                        correctIndex: 1,
+                        hint: 'Xem chi tiêu'
+                    },
+                    {
+                        id: 'q803',
+                        thaiQuestion: 'รวมทั้งหมด',
+                        vietnameseQuestion: '"รวมทั้งหมด" dùng khi?',
+                        options: ['Kiểm tra hóa đơn', 'Được báo tổng tiền', 'Rời phòng', 'Dùng thẻ'],
+                        correctIndex: 1,
+                        hint: 'Tổng cộng'
+                    },
+                    {
+                        id: 'q804',
+                        thaiQuestion: 'ใช้บัตรเครดิต',
+                        vietnameseQuestion: 'Làm sao thanh toán bằng thẻ?',
+                        options: ['เช็คบิล', 'รวมทั้งหมด', 'ใช้บัตรเครดิต', 'เช็คเอาท์'],
+                        correctIndex: 2,
+                        hint: 'Phương thức thanh toán'
+                    },
+                    {
+                        id: 'q805',
+                        thaiQuestion: 'ห้องไร้ปัญหา',
+                        vietnameseQuestion: '"ห้องไร้ปัญหา" là gì?',
+                        options: ['Hóa đơn sai', 'Phòng không vấn đề', 'Cần check-out', 'Dùng thẻ'],
+                        correctIndex: 1,
+                        hint: 'Phòng tốt'
+                    }
+                ]
+            },
+            {
+                id: 'lesson_010',
+                title: 'Hỏi Đường',
+                description: 'Từ vựng và cách hỏi đường ở Thái Lan',
+                category: 'directions',
+                difficulty: 'A1',
+                estimatedTime: '9 phút',
+                backgroundGradient: 'linear-gradient(135deg, #F9E79F, #8ABFD4)',
+                items: [
+                    {
+                        id: 'item_901',
+                        thaiText: 'ขออภัยค่ะ',
+                        vietnamesePronunciation: 'Khor a-phai khá',
+                        vietnameseMeaning: 'Xin lỗi',
+                        context: 'Bắt đầu hỏi đường'
+                    },
+                    {
+                        id: 'item_902',
+                        thaiText: 'ไป...ยังไง',
+                        vietnamesePronunciation: 'Pai...yang-ngai?',
+                        vietnameseMeaning: 'Đi tới...như thế nào?',
+                        context: 'Câu hỏi đường'
+                    },
+                    {
+                        id: 'item_903',
+                        thaiText: 'ทางขวา',
+                        vietnamesePronunciation: 'Thang khwaa',
+                        vietnameseMeaning: 'Bên phải',
+                        context: 'Chỉ hướng đi'
+                    },
+                    {
+                        id: 'item_904',
+                        thaiText: 'ทางซ้าย',
+                        vietnamesePronunciation: 'Thang sái',
+                        vietnameseMeaning: 'Bên trái',
+                        context: 'Chỉ hướng đi'
+                    },
+                    {
+                        id: 'item_905',
+                        thaiText: 'ตรงไป',
+                        vietnamesePronunciation: 'Trong pai',
+                        vietnameseMeaning: 'Đi thẳng',
+                        context: 'Hướng đi thẳng'
+                    }
+                ],
+                quizQuestions: [
+                    {
+                        id: 'q901',
+                        thaiQuestion: 'ขออภัยค่ะ',
+                        vietnameseQuestion: '"ขออภัยค่ะ" dùng khi?',
+                        options: ['Cảm ơn', 'Xin lỗi / Bắt đầu hỏi', 'Đi thẳng', 'Bên phải'],
+                        correctIndex: 1,
+                        hint: 'Bắt đầu câu chuyện'
+                    },
+                    {
+                        id: 'q902',
+                        thaiQuestion: 'ไป...ยังไง',
+                        vietnameseQuestion: 'Câu hỏi đường như thế nào?',
+                        options: ['ตรงไป', 'ไป...ยังไง', 'ทางขวา', 'ทางซ้าย'],
+                        correctIndex: 1,
+                        hint: 'Hỏi cách đi'
+                    },
+                    {
+                        id: 'q903',
+                        thaiQuestion: 'ทางขวา',
+                        vietnameseQuestion: '"ทางขวา" là?',
+                        options: ['Đi thẳng', 'Bên trái', 'Bên phải', 'Quay lại'],
+                        correctIndex: 2,
+                        hint: 'Hướng phải'
+                    },
+                    {
+                        id: 'q904',
+                        thaiQuestion: 'ทางซ้าย',
+                        vietnameseQuestion: '"ทางซ้าย" có nghĩa?',
+                        options: ['Bên phải', 'Bên trái', 'Đi thẳng', 'Quay lại'],
+                        correctIndex: 1,
+                        hint: 'Hướng trái'
+                    },
+                    {
+                        id: 'q905',
+                        thaiQuestion: 'ตรงไป',
+                        vietnameseQuestion: '"ตรงไป" dùng để?',
+                        options: ['Quay lại', 'Bên phải', 'Đi thẳng', 'Xin lỗi'],
+                        correctIndex: 2,
+                        hint: 'Hướng thẳng'
+                    }
+                ]
+            },
+            {
+                id: 'lesson_011',
+                title: 'Tình Huống Khẩn Cấp',
+                description: 'Từ vựng cơ bản khi cần giúp hoặc có sự cố',
+                category: 'emergency',
+                difficulty: 'A1',
+                estimatedTime: '8 phút',
+                backgroundGradient: 'linear-gradient(135deg, #E8847A, #F5B66D)',
+                items: [
+                    {
+                        id: 'item_1001',
+                        thaiText: 'ช่วยด้วย',
+                        vietnamesePronunciation: 'Chuay dûay',
+                        vietnameseMeaning: 'Giúp đỡ / SOS',
+                        context: 'Khi cần trợ giúp khẩn cấp'
+                    },
+                    {
+                        id: 'item_1002',
+                        thaiText: 'เจ็บตัว',
+                        vietnamesePronunciation: 'Jèp tua',
+                        vietnameseMeaning: 'Bị thương',
+                        context: 'Khi bị chấn thương'
+                    },
+                    {
+                        id: 'item_1003',
+                        thaiText: 'หมอ',
+                        vietnamesePronunciation: 'Mor',
+                        vietnameseMeaning: 'Bác sĩ',
+                        context: 'Khi cần bác sĩ'
+                    },
+                    {
+                        id: 'item_1004',
+                        thaiText: 'โรงพยาบาล',
+                        vietnamesePronunciation: 'Rong-pha-yaa-baan',
+                        vietnameseMeaning: 'Bệnh viện',
+                        context: 'Khi cần đến bệnh viện'
+                    },
+                    {
+                        id: 'item_1005',
+                        thaiText: 'ตำรวจ',
+                        vietnamesePronunciation: 'Tam-ruat',
+                        vietnameseMeaning: 'Cảnh sát',
+                        context: 'Khi cần cảnh sát'
+                    }
+                ],
+                quizQuestions: [
+                    {
+                        id: 'q1001',
+                        thaiQuestion: 'ช่วยด้วย',
+                        vietnameseQuestion: '"ช่วยด้วย" là gì?',
+                        options: ['Cảm ơn', 'Giúp đỡ', 'Bệnh viện', 'Cảnh sát'],
+                        correctIndex: 1,
+                        hint: 'Khẩn cấp'
+                    },
+                    {
+                        id: 'q1002',
+                        thaiQuestion: 'เจ็บตัว',
+                        vietnameseQuestion: '"เจ็บตัว" dùng khi?',
+                        options: ['Cần giúp', 'Bị thương', 'Cần bác sĩ', 'Cần cảnh sát'],
+                        correctIndex: 1,
+                        hint: 'Chấn thương'
+                    },
+                    {
+                        id: 'q1003',
+                        thaiQuestion: 'หมอ',
+                        vietnameseQuestion: '"หมอ" là?',
+                        options: ['Bệnh viện', 'Bác sĩ', 'Cảnh sát', 'Cấp cứu'],
+                        correctIndex: 1,
+                        hint: 'Chuyên y'
+                    },
+                    {
+                        id: 'q1004',
+                        thaiQuestion: 'โรงพยาบาล',
+                        vietnameseQuestion: '"โรงพยาบาล" có nghĩa?',
+                        options: ['Phòng khám', 'Bệnh viện', 'Cấp cứu', 'Dược sĩ'],
+                        correctIndex: 1,
+                        hint: 'Nơi chữa bệnh'
+                    },
+                    {
+                        id: 'q1005',
+                        thaiQuestion: 'ตำรวจ',
+                        vietnameseQuestion: 'Khi cần cảnh sát?',
+                        options: ['หมอ', 'ช่วยด้วย', 'ตำรวจ', 'โรงพยาบาล'],
+                        correctIndex: 2,
+                        hint: 'Lực lượng trật tự'
+                    }
+                ]
+            }
+        ];
+
+        // ===== STATE MANAGEMENT =====
+        let currentLessonId = null;
+        let currentTabName = 'poster';
+        let userProgress = {};
+        let currentFlashcardIndex = 0;
+        let currentQuizIndex = 0;
+        let quizAnswers = [];
+        let flashcardMastered = [];
+
+        // ===== INITIALIZATION =====
+        function init() {
+            loadProgress();
+            renderLessons();
+            updateStats();
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('thaiTalkProgress');
+            userProgress = saved ? JSON.parse(saved) : {};
+        }
+
+        function saveProgress() {
+            localStorage.setItem('thaiTalkProgress', JSON.stringify(userProgress));
+            updateStats();
+        }
+
+        // ===== HOME SCREEN =====
+        function renderLessons() {
+            const container = document.getElementById('lessonsList');
+            container.innerHTML = '';
+
+            lessonsData.forEach((lesson, index) => {
+                const progress = userProgress[lesson.id] || {
+                    status: 'not_started',
+                    completionPercentage: 0,
+                    modules: { poster: { viewed: false }, flashcards: { completed: false, lastScore: 0 }, quiz: { completed: false, bestScore: 0 } }
+                };
+
+                const isLocked = index > 0 && (!userProgress[lessonsData[index - 1].id] || userProgress[lessonsData[index - 1].id].status !== 'completed');
+                const badgeText = isLocked ? 'KHÓA' : (progress.status === 'completed' ? '✓ HOÀN THÀNH' : progress.status === 'in_progress' ? 'ĐANG HỌC' : 'MỚI');
+                const badgeClass = isLocked ? 'locked' : (progress.status === 'completed' ? '' : (progress.status === 'in_progress' ? '' : 'new'));
+
+                const card = document.createElement('div');
+                card.className = `lesson-card ${isLocked ? 'locked' : ''}`;
+                card.onclick = !isLocked ? () => openLesson(lesson.id) : null;
+
+                card.innerHTML = `
+                    <div class="lesson-header">
+                        <div class="lesson-title">${lesson.title}</div>
+                        <div class="lesson-badge ${badgeClass}">${badgeText}</div>
+                    </div>
+                    <div class="lesson-description">${lesson.description}</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress.completionPercentage}%"></div>
+                    </div>
+                    <div class="lesson-meta">
+                        <span>⏱️ ${lesson.estimatedTime}</span>
+                        <span>${progress.completionPercentage}%</span>
+                        <button class="btn-primary lesson-btn" onclick="event.stopPropagation(); openLesson('${lesson.id}')">${isLocked ? 'Mở khóa' : 'Tiếp Tục'} →</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function updateStats() {
+            let streak = 0, points = 0, completed = 0;
+            Object.values(userProgress).forEach(prog => {
+                if (prog.status === 'completed') completed++;
+                points += (prog.modules.quiz.bestScore || 0);
+            });
+            document.getElementById('streakNum').textContent = completed;
+            document.getElementById('pointsNum').textContent = points;
+            document.getElementById('lessonsNum').textContent = completed;
+        }
+
+        // ===== NAVIGATION =====
+        function openLesson(lessonId) {
+            currentLessonId = lessonId;
+            const lesson = lessonsData.find(l => l.id === lessonId);
+            document.getElementById('lessonTitle').textContent = lesson.title;
+            
+            if (!userProgress[lessonId]) {
+                userProgress[lessonId] = {
+                    status: 'in_progress',
+                    completionPercentage: 0,
+                    modules: {
+                        poster: { viewed: false },
+                        flashcards: { completed: false, lastScore: 0, masteredItems: [] },
+                        quiz: { completed: false, bestScore: 0, answers: [] }
+                    }
+                };
+            }
+            userProgress[lessonId].status = 'in_progress';
+            saveProgress();
+
+            switchTab('poster');
+            showScreen('lessonScreen');
+            renderPoster();
+        }
+
+        function switchTab(tabName) {
+            currentTabName = tabName;
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                btn.classList.remove('active');
+                document.querySelectorAll('.module').forEach(mod => mod.classList.remove('active'));
+            });
+            
+            const tabs = ['poster', 'flashcard', 'quiz'];
+            const btnIndex = tabs.indexOf(tabName);
+            document.querySelectorAll('.tab-btn')[btnIndex].classList.add('active');
+            document.getElementById(tabName + 'Module').classList.add('active');
+
+            if (tabName === 'flashcard') {
+                initFlashcards();
+            } else if (tabName === 'quiz') {
+                initQuiz();
+            }
+        }
+
+        function goHome() {
+            showScreen('homeScreen');
+            renderLessons();
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // ===== POSTER MODULE =====
+        function renderPoster() {
+            const lesson = lessonsData.find(l => l.id === currentLessonId);
+            const container = document.getElementById('posterContent');
+            container.innerHTML = `
+                <div class="poster-header" style="background: ${lesson.backgroundGradient}">
+                    <h2 class="poster-title">🇹🇭 ${lesson.title}</h2>
+                    <p class="poster-subtitle">${lesson.description}</p>
+                </div>
+                <div class="poster-objectives">
+                    <h3 class="objectives-title">Mục tiêu bài học</h3>
+                    <ul class="objectives-list">
+                        <li>Nắm ${lesson.items.length} từ vựng cơ bản</li>
+                        <li>Phát âm chính xác như người Thái</li>
+                        <li>Tự tin sử dụng trong hội thoại</li>
+                    </ul>
+                </div>
+                <div id="itemsContainer"></div>
+            `;
+
+            const itemsContainer = document.getElementById('itemsContainer');
+            lesson.items.forEach((item, idx) => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'item-card';
+                itemEl.innerHTML = `
+                    <div class="thai-text">${item.thaiText}</div>
+                    <div class="pronunciation">📢 ${item.vietnamesePronunciation}</div>
+                    <div class="meaning">📖 ${item.vietnameseMeaning}</div>
+                    <div class="item-actions">
+                        <button class="btn-audio" onclick="speakThai('${item.thaiText.replace(/'/g, "\\'")}')">🔊 Nghe phát âm</button>
+                    </div>
+                    <div class="context-note">
+                        <span class="context-label">Cách dùng:</span>
+                        ${item.context}
+                    </div>
+                `;
+                itemsContainer.appendChild(itemEl);
+            });
+        }
+
+        function markPosterViewed() {
+            userProgress[currentLessonId].modules.poster.viewed = true;
+            updateLessonCompletion();
+            switchTab('flashcard');
+        }
+
+        // ===== FLASHCARD MODULE =====
+        function initFlashcards() {
+            const lesson = lessonsData.find(l => l.id === currentLessonId);
+            flashcardMastered = userProgress[currentLessonId].modules.flashcards.masteredItems || [];
+            currentFlashcardIndex = 0;
+            updateFlashcardDisplay();
+        }
+
+        function updateFlashcardDisplay() {
+            const lesson = lessonsData.find(l => l.id === currentLessonId);
+            const notMastered = lesson.items.filter(item => !flashcardMastered.includes(item.id));
+
+            if (notMastered.length === 0) {
+                document.getElementById('flashcardCompleteBtn').style.display = 'block';
+                document.getElementById('flashcard').style.display = 'none';
+                document.querySelector('.flashcard-actions').style.display = 'none';
+                document.querySelector('.flashcard-progress').innerHTML = '<strong>🎉 Bạn đã nắm vững tất cả thẻ!</strong>';
+                return;
+            }
+
+            const currentItem = notMastered[currentFlashcardIndex];
+            document.getElementById('flashcard').classList.remove('flipped');
+            document.getElementById('fcThai').textContent = currentItem.thaiText;
+            document.getElementById('fcPronunciation').textContent = currentItem.vietnamesePronunciation;
+            document.getElementById('fcMeaning').textContent = currentItem.vietnameseMeaning;
+            document.getElementById('fcHint').textContent = currentItem.context;
+
+            document.getElementById('flashcardCount').textContent = `${currentFlashcardIndex + 1}/${notMastered.length}`;
+            document.getElementById('masteredCount').textContent = flashcardMastered.length;
+            document.getElementById('remainingCount').textContent = notMastered.length;
+
+            const progress = (flashcardMastered.length / lesson.items.length) * 100;
+            document.querySelector('.progress-fill').style.width = progress + '%';
+        }
+
+        function flipCard() {
+            document.getElementById('flashcard').classList.toggle('flipped');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const card = document.getElementById('flashcard');
+            if (card) {
+                card.addEventListener('click', flipCard);
+            }
+        });
+
+        function markCardKnown() {
+            const lesson = lessonsData.find(l => l.id === currentLessonId);
+            const notMastered = lesson.items.filter(item => !flashcardMastered.includes(item.id));
+            const currentItem = notMastered[currentFlashcardIndex];
+            flashcardMastered.push(currentItem.id);
+            currentFlashcardIndex++;
+            updateFlashcardDisplay();
+        }
+
+        function markCardForgot() {
+            const lesson = lessonsData.find(l => l.id === currentLessonId);
+            const notMastered = lesson.items.filter(item => !flashcardMastered.includes(item.id));
+            currentFlashcardIndex = (currentFlashcardIndex + 1) % notMastered.length;
+            updateFlashcardDisplay();
+        }
+
+        function goToQuiz() {
+            userProgress[currentLessonId].modules.flashcards.masteredItems = flashcardMastered;
+            userProgress[currentLessonId].modules.flashcards.completed = true;
+            saveProgress();
+            switchTab('quiz');
+        }
+
+        // ===== QUIZ MODULE =====
+        function initQuiz() {
+            const lesson = lessonsData.find(l => l.id === currentLessonId);
+            currentQuizIndex = 0;
+            quizAnswers = [];
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            const lesson = lessonsData.find(l => l.id === currentLessonId);
+            const question = lesson.quizQuestions[currentQuizIndex];
+            
+            document.getElementById('quizProgress').textContent = `Câu ${currentQuizIndex + 1}/${lesson.quizQuestions.length}`;
+            document.getElementById('quizFeedback').classList.remove('show', 'correct', 'incorrect');
+
+            const quizContent = document.getElementById('quizContent');
+            quizContent.innerHTML = `
+                <div class="quiz-question">🇹🇭 ${question.vietnameseQuestion}</div>
+                <div class="quiz-options" id="optionsContainer"></div>
+            `;
+
+            const optionsContainer = document.getElementById('optionsContainer');
+            question.options.forEach((option, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option';
+                btn.textContent = option;
+                btn.onclick = () => selectOption(idx);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quizSubmitBtn').style.display = 'block';
+            document.getElementById('quizNextBtn').style.display = 'none';
+        }
+
+        function selectOption(index) {
+            document.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+            document.querySelectorAll('.quiz-option')[index].classList.add('selected');
+        }
+
+        function submitQuizAnswer() {
+            const selected = document.querySelector('.quiz-option.selected');
+            if (!selected) {
+                alert('Vui lòng chọn một đáp án');
+                return;
+            }
+
+            const lesson = lessonsData.find(l => l.id === currentLessonId);
+            const question = lesson.quizQuestions[currentQuizIndex];
+            const selectedIndex = Array.from(document.querySelectorAll('.quiz-option')).indexOf(selected);
+            const isCorrect = selectedIndex === question.correctIndex;
+
+            quizAnswers.push({ questionId: question.id, userAnswer: selectedIndex, correct: isCorrect });
+
+            document.querySelectorAll('.quiz-option').forEach((opt, idx) => {
+                if (idx === question.correctIndex) {
+                    opt.classList.add('correct');
+                } else if (idx === selectedIndex && !isCorrect) {
+                    opt.classList.add('incorrect');
+                }
+            });
+
+            const feedback = document.getElementById('quizFeedback');
+            feedback.classList.add('show');
+            if (isCorrect) {
+                feedback.classList.add('correct');
+                feedback.innerHTML = '✓ <strong>Chính xác!</strong> ' + (question.hint || '');
+            } else {
+                feedback.classList.add('incorrect');
+                feedback.innerHTML = '✗ <strong>Sai rồi.</strong> Đáp án đúng: ' + question.options[question.correctIndex];
+            }
+
+            document.getElementById('quizSubmitBtn').style.display = 'none';
+            document.getElementById('quizNextBtn').style.display = 'block';
+        }
+
+        function nextQuizQuestion() {
+            const lesson = lessonsData.find(l => l.id === currentLessonId);
+            currentQuizIndex++;
+
+            if (currentQuizIndex >= lesson.quizQuestions.length) {
+                completeQuiz();
+            } else {
+                renderQuizQuestion();
+            }
+        }
+
+        function completeQuiz() {
+            const lesson = lessonsData.find(l => l.id === currentLessonId);
+            const correctCount = quizAnswers.filter(a => a.correct).length;
+            const score = Math.round((correctCount / quizAnswers.length) * 100);
+
+            userProgress[currentLessonId].modules.quiz.completed = true;
+            userProgress[currentLessonId].modules.quiz.bestScore = score;
+            userProgress[currentLessonId].modules.quiz.answers = quizAnswers;
+
+            if (userProgress[currentLessonId].modules.poster.viewed && 
+                userProgress[currentLessonId].modules.flashcards.completed && 
+                userProgress[currentLessonId].modules.quiz.completed) {
+                userProgress[currentLessonId].status = 'completed';
+                userProgress[currentLessonId].completionPercentage = 100;
+            }
+
+            saveProgress();
+
+            document.getElementById('finalScore').textContent = score + '%';
+            document.getElementById('completionScoreValue').textContent = score + '%';
+            document.getElementById('completionCorrectValue').textContent = `${correctCount}/${quizAnswers.length}`;
+            document.getElementById('completionMasteredValue').textContent = flashcardMastered.length;
+
+            showScreen('completionScreen');
+        }
+
+        // ===== UTILITY FUNCTIONS =====
+        function updateLessonCompletion() {
+            const progress = userProgress[currentLessonId];
+            const poster = progress.modules.poster.viewed ? 33 : 0;
+            const flashcard = progress.modules.flashcards.completed ? 33 : 0;
+            const quiz = progress.modules.quiz.completed ? 34 : 0;
+            progress.completionPercentage = poster + flashcard + quiz;
+
+            if (poster + flashcard + quiz >= 100) {
+                progress.status = 'completed';
+            }
+        }
+
+        function openSettings() {
+            alert('⚙️ Cài đặt\n\n• Âm lượng: Bật\n• Ngôn ngữ: Tiếng Việt\n• Chế độ: Sáng\n\n(Tính năng chi tiết sẽ được thêm vào)');
+        }
+
+        init();
+    </script>
+</body>
+</html>
